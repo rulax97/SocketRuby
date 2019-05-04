@@ -1,31 +1,33 @@
 #!/usr/bin/ruby
 require 'socket'                 
-
-server = TCPServer.open(2000)
+# //*Autor: Raul Ernesto Perez Barcenas*//
+# //*Matricula: 148661*//
+# //*Version: 1.0*//
+# //*Asignatura: Programacion Integrativa (UACJ)*//
+server = TCPServer.open(4444)
 loop {
    Thread.start(server.accept) do |client|
     a=client.recvfrom(1024)[0].chomp;
     puts a;
-
     def checks(var)
         sum=0;
         var.each_byte do |c|
-            sum= sum + c;
+            sum = sum + c;
         end
        return sum;
     end
     if a[0]=='R'
         iL=Array.new(4);
-        a=0;
+        #a=0;
         t=a[0];
         on=a[1...9];
         sn=a[9...17];
-        cs=a[17,21];
+        cs=a[17...21];
         tmp=t+on+sn;
         k=checks tmp;
         puts sn
         if k.to_s==cs
-            puts "Success";
+            puts "Exitoso";
             File.open("log.txt","a") do |line|
                 line.puts on+","+sn;
             end
@@ -42,7 +44,7 @@ loop {
             if a==1
                 client.puts iL;
             else
-                client.puts "Error!!! Not found.";
+                client.puts "Error, no se encontro el archivo.";
             end
             puts a;
         end
@@ -57,13 +59,12 @@ loop {
         tmp=t+sn+data+time+date;
         k=checks tmp;
         if k.to_s==cs
-            puts "Success";
+            puts "Recibido satisfactoriamente!";
             File.open("data.txt","a") do |line|
-                line.puts sn+","+data+","+time+","+date;
+                line.puts sn+","+data+","+time+","+date+","+cs;
             end
         end
     end
-
    client.close
    end
 }
